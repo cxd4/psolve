@@ -76,12 +76,12 @@ static int solve_polynomial(long a_n, long a_0)
     {
         if (roots_neg[i] != 0.)
         {
-            printf("x = %f\n", roots_neg[i]);
+            printf("x = %g\n", roots_neg[i]);
             ++j;
         }
         if (possible_roots[i] != 0.)
         {
-            printf("x = %f\n", possible_roots[i]);
+            printf("x = %g\n", possible_roots[i]);
             ++j;
         }
     }
@@ -268,7 +268,7 @@ static int enum_ratios(double * ratios, long * num, long * den, int nN, int nD)
         if (j > 0)
             fputs(", ", stdout);
         j = 1;
-        printf("+/-%f", ratios[i]);
+        printf("+/-%g", ratios[i]);
     }
     putchar('}');
     putchar('\n');
@@ -291,7 +291,7 @@ static int root_test(double x)
 
     for (i = 0; i < number_of_coefficients; i++)
         result += coefficients[i] * intpow(x, number_of_coefficients - 1 - i);
-    printf("f(x = %f) = %f\n", x, result);
+    printf("f(x = %g) = %.8g\n", x, result);
     return (result == 0.);
 }
 
