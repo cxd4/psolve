@@ -286,6 +286,9 @@ static int root_test(double x)
     register int i;
 
     result = 0.;
+    if (x == 0.)
+        return 0; /* 0 is never a possible root when the a_0 term is nonzero. */
+
     for (i = 0; i < number_of_coefficients; i++)
         result += coefficients[i] * intpow(x, number_of_coefficients - 1 - i);
     printf("f(x = %f) = %f\n", x, result);
