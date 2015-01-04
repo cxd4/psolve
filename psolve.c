@@ -260,6 +260,7 @@ static int enum_ratios(double * ratios, long * num, long * den, int nN, int nD)
             ++k;
         }
 
+    fputs("+/-", stdout);
     putchar('{');
     for (i = 0, j = 0; i < k; i++)
     {
@@ -268,7 +269,7 @@ static int enum_ratios(double * ratios, long * num, long * den, int nN, int nD)
         if (j > 0)
             fputs(", ", stdout);
         j = 1;
-        printf("+/-%g", ratios[i]);
+        printf("%g", ratios[i]);
     }
     putchar('}');
     putchar('\n');
@@ -291,7 +292,10 @@ static int root_test(double x)
 
     for (i = 0; i < number_of_coefficients; i++)
         result += coefficients[i] * intpow(x, number_of_coefficients - 1 - i);
-    printf("f(x = %g) = %.8g\n", x, result);
+    i = printf("f(x = %.4g)", x);
+    if (i < 16)
+        putchar('\t');
+    printf("= %.8g\n", result);
     return (result == 0.);
 }
 
