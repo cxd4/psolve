@@ -30,12 +30,16 @@ static int P_rational_roots(long * coefficients, int degree)
     puts("Factors of a0:");
     number_of_factors[0] = count_factors(a0);
     constant_factors = malloc(number_of_factors[0] * sizeof(long));
+    if (constant_factors == NULL)
+        return 0; /* can't solve anything if unable to allocate enough memory */
     enum_factors(constant_factors, a0);
     putchar('\n');
 
     puts("Factors of an:");
     number_of_factors[1] = count_factors(an);
     leading_factors = malloc(number_of_factors[1] * sizeof(long));
+    if (leading_factors == NULL)
+        return 0;
     enum_factors(leading_factors, an);
     putchar('\n');
 
@@ -52,6 +56,8 @@ static int P_rational_roots(long * coefficients, int degree)
     free(constant_factors);
     free(leading_factors);
     roots_neg = malloc(rational_number_solutions * sizeof(double));
+    if (roots_neg == NULL)
+        return 0;
 
 /*
  * Because even positive integers can be factored into either both positive
@@ -72,6 +78,7 @@ static int P_rational_roots(long * coefficients, int degree)
         possible_roots[i]
          *= (double)root_test(possible_roots[i], coefficients, degree);
 
+    free(coefficients);
     putchar('\n');
     wall_clock_status("Solve time");
     j = 0;
@@ -88,6 +95,8 @@ static int P_rational_roots(long * coefficients, int degree)
             ++j;
         }
     }
+    free(possible_roots);
+    free(roots_neg);
     return (j);
 }
 
@@ -106,6 +115,11 @@ int main(int argc, char ** argv)
     }
 
     coefficients = malloc(sizeof(long) * terms);
+    if (coefficients == NULL)
+    { /* Ouch!  Try closing some giant processes or something. */
+        fputs("Too complex to solve with currently available RAM.\n", stderr);
+        return -1;
+    }
     for (i = 0; i < terms; i++)
         coefficients[i] = strtol(argv[i + 1], NULL, 0);
 
