@@ -4,19 +4,17 @@
 #include <memory.h>
 #include <time.h>
 
-static int number_of_coefficients;
-static long * coefficients;
-
 static double intpow(double base, int power);
+static double P_evaluate(double x, long * coefficients, int degree);
+static int P_rational_roots(long * coefficients, int degree);
+static int root_test(double x, long * coefficients, int degree);
 static int is_integer(double x);
-static int solve_polynomial(long a_n, long a_0);
 static int count_factors(long product);
-static int enum_ratios(double * ratios, long * num, long * den, int nN, int nD);
 static int enum_factors(long * factors, long product);
-static int root_test(double x);
+static int enum_ratios(double * ratios, long * num, long * den, int nN, int nD);
 static void wall_clock_status(const char * title);
 
-static int solve_polynomial(long a_n, long a_0)
+static int P_rational_roots(long * coefficients, int degree)
 {
     double * possible_roots;
     double * roots_neg;
@@ -25,17 +23,20 @@ static int solve_polynomial(long a_n, long a_0)
     int number_of_factors[2];
     int rational_number_solutions;
     register int i, j;
+    const int n = degree;
+    const long a0 = coefficients[n - 0];
+    const long an = coefficients[n - n];
 
     puts("Factors of a0:");
-    number_of_factors[0] = count_factors(a_0);
+    number_of_factors[0] = count_factors(a0);
     constant_factors = malloc(number_of_factors[0] * sizeof(long));
-    enum_factors(constant_factors, a_0);
+    enum_factors(constant_factors, a0);
     putchar('\n');
 
     puts("Factors of an:");
-    number_of_factors[1] = count_factors(a_n);
+    number_of_factors[1] = count_factors(an);
     leading_factors = malloc(number_of_factors[1] * sizeof(long));
-    enum_factors(leading_factors, a_n);
+    enum_factors(leading_factors, an);
     putchar('\n');
 
     puts("Possible solutions:");
@@ -65,9 +66,11 @@ static int solve_polynomial(long a_n, long a_0)
  * for polynomials adhering to the restrictions of the rational root theorem.
  */
     for (i = 0; i < rational_number_solutions; i++)
-        roots_neg[i] *= (double)root_test(roots_neg[i]);
+        roots_neg[i]
+         *= (double)root_test(roots_neg[i], coefficients, degree);
     for (i = 0; i < rational_number_solutions; i++)
-        possible_roots[i] *= (double)root_test(possible_roots[i]);
+        possible_roots[i]
+         *= (double)root_test(possible_roots[i], coefficients, degree);
 
     putchar('\n');
     wall_clock_status("Solve time");
@@ -90,20 +93,23 @@ static int solve_polynomial(long a_n, long a_0)
 
 int main(int argc, char ** argv)
 {
+    long * coefficients;
+    int n, terms;
     register int i;
 
-    number_of_coefficients = argc - 1; /* arg[0] always command path */
-    if (number_of_coefficients < 2)
+    terms = argc - 1; /* e.g., `psolve 1 0 3`:  x^2 + 0x + 3 = 0, so 3 terms. */
+    n = terms - 1; /* e.g., `x^2 + 0x^1 + 3 = 0, so a_n is a_2 or degree = 2. */
+    if (n < 1)
     {
         fputs("Not a solvable polynomial.\n", stderr);
         return 1;
     }
 
-    coefficients = malloc(sizeof(long) * number_of_coefficients);
-    for (i = number_of_coefficients; i > 0; i--)
-        coefficients[i - 1] = strtol(argv[i], NULL, 0);
+    coefficients = malloc(sizeof(long) * terms);
+    for (i = 0; i < terms; i++)
+        coefficients[i] = strtol(argv[i + 1], NULL, 0);
 
-    if (coefficients[0] == 0)
+    if (coefficients[n - n] == 0)
     {
         fprintf(
             stderr,
@@ -112,16 +118,16 @@ int main(int argc, char ** argv)
             "Lead coefficient must be a real, nonzero number.",
             argv[0 + 1]
         );
-        return 2;
+        return -1;
     }
-    if (coefficients[number_of_coefficients - 1] == 0)
+    if (coefficients[n - 0] == 0)
     {
         fprintf(
             stderr,
             "Not a standard polynomial:  %s\n"\
             "Try again without the \"%s\" at the end.\n",
             "Constant term must be a real, nonzero number.",
-            argv[number_of_coefficients - 1 + 1]
+            argv[n - 1 + 1]
         );
         return 3;
     }
@@ -134,23 +140,21 @@ int main(int argc, char ** argv)
  * numerator written as the negative, not the divisor, and the rational root
  * theorem requires dividing the constant term by the leading coefficient.
  */
-    if (coefficients[0] < 0)
-        for (i = 0; i < number_of_coefficients; i++)
+    if (coefficients[n - n] < 0)
+        for (i = 0; i < terms; i++)
             coefficients[i] = -coefficients[i];
 
     puts("Now solving polynomial function for x, when f(x) = 0:");
-    if (coefficients[0] == 1)
+    if (coefficients[n - n] == 1)
         { /* branch unlikely */ }
     else
-        printf("%lu", coefficients[0]);
+        printf("%lu", coefficients[n - n]);
     putchar('x');
-    if (number_of_coefficients - 1 > 1)
-        printf("^%u", number_of_coefficients - 1);
+    if (n > 1)
+        printf("^%u", n);
     putchar(' ');
-    for (i = 1; i < number_of_coefficients - 1; i++)
+    for (i = 0 + 1; i < terms - 1; i++)
     {
-        const unsigned int current_power = number_of_coefficients - i - 1;
-
         if (coefficients[i] == 0)
             continue;
 
@@ -161,19 +165,16 @@ int main(int argc, char ** argv)
         else
             printf("+ %ldx", coefficients[i]);
 
-        if (current_power > 1)
-            printf("^%u", current_power);
+        if (n - i > 1)
+            printf("^%u", n - i);
         putchar(' ');
     }
-    printf("+ %ld = 0", coefficients[i]);
+    printf("+ %ld = 0", coefficients[n]);
     putchar('\n');
     wall_clock_status("Time spent decoding polynomial");
     putchar('\n');
 
-    i = solve_polynomial(
-        coefficients[0],
-        coefficients[number_of_coefficients - 1]
-    );
+    i = P_rational_roots(coefficients, n);
     printf("Total solutions found:  %i\n", i);
     return 0;
 }
@@ -281,17 +282,45 @@ static int enum_ratios(double * ratios, long * num, long * den, int nN, int nD)
 #endif
 }
 
-static int root_test(double x)
+/*
+ * Evalute polynomial function P(x).
+ *
+ * Example:  P(x) = x^2 + 3x + 9
+ *     coefficients[0] =  1;
+ *     coefficients[1] =  3;
+ *     coefficients[2] =  9;
+ *     call:  P_evalute(x, coefficients, 2);
+ */
+static double P_evaluate(double x, long * coefficients, int degree)
 {
     double result;
     register int i;
 
     result = 0.;
+    for (i = 0; i < degree + 1; i++)
+        result += (double)coefficients[i] * intpow(x, degree - i);
+    return (result);
+}
+
+static int root_test(double x, long * coefficients, int degree)
+{
+    double result;
+    register int i;
+
     if (x == 0.)
         return 0; /* 0 is never a possible root when the a_0 term is nonzero. */
+#ifdef TODO_TRY_TESTING_WITH_SYNTHETIC_DIVISION_TABLES_INSTEAD
+ /* ??? */
 
-    for (i = 0; i < number_of_coefficients; i++)
-        result += coefficients[i] * intpow(x, number_of_coefficients - 1 - i);
+/* Synthetic division is a less definitive bypass but computes much faster
+ * than squaring x, cubing x, and having to do other higher-power exponents
+ * when solving incredibly complex polynomials which the user might try to
+ * task this program with.  I will see about implementing this performance
+ * saver shortcut later on if the solving process starts to make us wait.
+ */
+#else
+    result = P_evaluate(x, coefficients, degree);
+#endif
     i = printf("f(x = %.4g)", x);
     if (i < 16)
         putchar('\t');
