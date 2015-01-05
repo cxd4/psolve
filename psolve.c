@@ -4,6 +4,19 @@
 #include <memory.h>
 #include <time.h>
 
+#if 0
+#define IS_SIGNED(type)         ((type)-1 == (unsigned)-1)
+#else
+#define IS_SIGNED(type)         1
+#endif
+
+#define MIN(m, n)               (((m) < (n)) ? (m) : (n))
+#define MAX(m, n)               (((m) > (n)) ? (m) : (n))
+#define INFINITY_CLAMP(type)    \
+    (signed long)((1UL << (8*sizeof(type) - IS_SIGNED(type))) - 1)
+#define REGISTER_CLAMP(n, type) \
+    (((n) < 0) ? MAX(-INFINITY_CLAMP(type), n) : MIN(+INFINITY_CLAMP(type), n))
+
 static double intpow(double base, int power);
 static double P_evaluate(double x, long * coefficients, int degree);
 static int P_rational_roots(long * coefficients, int degree);
@@ -28,7 +41,7 @@ static int P_rational_roots(long * coefficients, int degree)
     const long an = coefficients[n - n];
 
     puts("Factors of a0:");
-    number_of_factors[0] = count_factors(a0);
+    number_of_factors[0] = REGISTER_CLAMP(count_factors(a0), short);
     constant_factors = malloc(number_of_factors[0] * sizeof(long));
     if (constant_factors == NULL)
         return 0; /* can't solve anything if unable to allocate enough memory */
@@ -36,7 +49,7 @@ static int P_rational_roots(long * coefficients, int degree)
     putchar('\n');
 
     puts("Factors of an:");
-    number_of_factors[1] = count_factors(an);
+    number_of_factors[1] = REGISTER_CLAMP(count_factors(an), short);
     leading_factors = malloc(number_of_factors[1] * sizeof(long));
     if (leading_factors == NULL)
         return 0;
@@ -134,17 +147,6 @@ int main(int argc, char ** argv)
         );
         return -1;
     }
-    if (coefficients[n - 0] == 0)
-    {
-        fprintf(
-            stderr,
-            "Not a standard polynomial:  %s\n"\
-            "Try again without the \"%s\" at the end.\n",
-            "Constant term must be a real, nonzero number.",
-            argv[n - 1 + 1]
-        );
-        return 3;
-    }
 
 /*
  * Prefer to print "3x^2 + 4x - 1 = 0"
@@ -213,9 +215,16 @@ static int count_factors(long product)
     register int number_of_factors;
     register long factor;
 
-    number_of_factors = 0;
+/*
+ * 0 has infinitely many factors, but we can't actually allocate that many
+ * elements of memory, of course.  Still, for mathematical accuracy...
+ */
+    if (product == 0)
+        return INFINITY_CLAMP(signed int);
     if (product < 0)
         product = -product;
+    number_of_factors = 0;
+
     for (factor = 1; factor - 1 < product; factor++)
         number_of_factors += is_integer((double)product / (double)factor);
     return (number_of_factors);
@@ -226,12 +235,16 @@ static int enum_factors(long * factors, long product)
     register int number_of_factors;
     register double factor, product_f;
 
-    number_of_factors = 0;
     if (product < 0)
         product = -product;
     product_f = (double)product;
     putchar('{');
-    for (factor = 1.; factor <= product_f; factor += 1.)
+    if (product == 0)
+        printf(" ... infinitely many ... ");
+    for (
+        factor  = 1.       ,   number_of_factors = 0;
+        factor <= product_f && number_of_factors < INFINITY_CLAMP(int);
+        factor += 1.       ,   number_of_factors++)
     {
         const double ratio = product_f / factor;
         const int whole_number = is_integer(ratio);
@@ -241,8 +254,8 @@ static int enum_factors(long * factors, long product)
         if (number_of_factors > 0)
             fputs(", ", stdout);
         factors[number_of_factors] = (long)ratio;
-        printf("%ld", factors[number_of_factors]);
-        ++number_of_factors;
+        if (product != 0)
+            printf("%ld", factors[number_of_factors]);
     }
     putchar('}');
     putchar('\n');
