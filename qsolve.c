@@ -25,6 +25,8 @@ typedef struct {
 } complex;
 typedef complex* vector;
 
+extern double cbrt(double x);
+
 static vector linear_inverse(
     double a, double b);
 static vector quadratic_inverse(
@@ -128,32 +130,74 @@ static vector quadratic_inverse(double a, double b, double c)
 static vector cubic_inverse(double a, double b, double c, double d)
 {
     vector x;
+    double p, q, r;
+    double discriminant;
 
     if (a == 0.)
         return quadratic_inverse(b, c, d);
     x = malloc(3 * sizeof(complex));
 
-/*
- * Since ax^3 + bx^2 + cx + d = 0, and a != 0, we know that:
- * ax^3/a + bx^2/a + cx/a + d/a = 0/a, so we can permanently divide by a.
- *
- * Eliminating the use of `a` from the solve algorithm is not so much an
- * attempt at [premature] optimization, so much as it is to keep the size of
- * the algorithm smaller, as there is no official, standard cubic formula.
- * The cubic formula, in plain sight, is pages long.  Any attempt at showing
- * the formula in any programming language will either be the same way or use
- * plenty of higher-level variables.
- */
-    a /= a;
-    b /= a;
-    c /= a;
-    d /= a;
+    p = b / a;
+    q = c / a;
+    r = d / a;
 
 /*
- * sadly I forget what the cubic formula is atm... :P
- * There were two or three algebraic/geometric methods of defining it I saw.
+ * Cardano's derivation of the cubic solutions in ca. 1545:
+ * Rewrite "y^3 + py^2 + qy + r" as the reduced cubic "x^3 + ax + b = 0".
  */
-    fputs("Not yet implemented:  Cubic function inverses.\n", stderr);
+    a = (3*q - p*p) / 3;
+    b = (2*p*p*p - 9*p*q + 27*r) / 27;
+    discriminant = (b * b)/4 + (a * a * a)/27;
+
+    if (discriminant < 0)
+    { /* three real and unequal roots */
+        double cosine_theta;
+
+        discriminant = -(a * a * a)/(3 * 3 * 3);
+        cosine_theta = -(b / 2) / sqrt(discriminant);
+
+        x[0].a = 2 * sqrt(-a / 3) * cos(cosine_theta / 3);
+        x[0].b = 0;
+
+        fputs("Not yet implemented:  Cubic trigonometry.\n", stderr);
+    }
+    else if (discriminant == 0)
+    { /* three real roots of which two at least are equal */
+        double A, B;
+
+/*
+ * b^2/4 + a^3/27 = 0 # And we know that (a <= 0) must also be true.
+ * b^2/4          = -a^3/27
+ * b/2            = sqrt(-27a^3)/27
+ * cbrt(b/2)      = cbrt(sqrt(-27a^3))/3
+ *                = (-3^3 * a^3)^(1/6) / 3 = ((-3a)^3)^(1/6) / 3
+ *                = sqrt(-3a) / 3
+ */
+        A = B = sqrt(-3 * a) / 3;
+
+        x[0].a = A + B;
+        x[0].b = 0;
+
+        x[1].a = -(A + B)/2;
+        x[1].b = 0; /* = (A - B)/2 * sqrt(-3) = 0 * sqrt(-3) */
+
+        x[2].a = -(A + B)/2;
+        x[2].b = 0;
+    }
+    else
+    { /* one real root and two conjugate imaginary roots */
+        const double A = cbrt(-b/2 + sqrt(discriminant));
+        const double B = cbrt(-b/2 - sqrt(discriminant));
+
+        x[0].a = A + B;
+        x[0].b = 0;
+
+        x[1].a = -(A + B) / 2;
+        x[1].b = +sqrt(3) * (A - B)/2;
+
+        x[2].a = -(A + B) / 2;
+        x[2].b = -sqrt(3) * (A - B)/2;
+    }
     return (x);
 }
 
@@ -167,6 +211,6 @@ static vector quartic_inverse(double a, double b, double c, double d, double e)
 
  /* ??? */
 
-    fputs("Not yet implemented:  Quartic function inverses.\n", stderr);
+    fputs("Not yet implemented:  Quartic function inversion.\n", stderr);
     return (x);
 }
