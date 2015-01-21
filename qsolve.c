@@ -19,6 +19,10 @@
  */
 #define MAX_POLYNOMIAL_DEPTH    4
 
+/*
+ * All complex numbers can be written in the form:  (a + bi)
+ * For example, sqrt(-9) = 0 + 3i.  (i is always sqrt(-1).)
+ */
 typedef struct {
     double a; /* real component */
     double b; /* imaginary component */
@@ -75,11 +79,13 @@ int main(int argc, char ** argv)
     return 0;
 }
 
+/*
+ * Just a dummy placeholder function for solving for x:
+ * ax + b = 0, when a is 0.  (Doesn't really do anything.)
+ */
 static vector constant_inverse(double a)
 {
-    a = a / 1.;
-
-    return NULL;
+    return (1. / a);
 }
 
 static vector linear_inverse(double a, double b)
@@ -90,8 +96,8 @@ static vector linear_inverse(double a, double b)
         return constant_inverse(b);
     x = malloc(1 * sizeof(complex));
 
-    x[0].a = -b / a;
-    x[0].b = 0.;
+    x[0].a = -b / a; /* ax + b = 0, so x = -b/a. */
+    x[0].b = 0.; /* Such a simple solution for x has no imaginary unit. */
     return (x);
 }
 
@@ -105,9 +111,15 @@ static vector quadratic_inverse(double a, double b, double c)
     x = malloc(2 * sizeof(complex));
 
 #if 0
-    a /= a;
-    b /= a;
+/*
+ * Optional:  Divide all coefficients by (a).
+ * x^2 + bx + c = 0
+ * x = -b/2 +/- sqrt(b^2 - 4c)/2
+ * If (b*b - 4*c < 0), then x is a complex number:  (a +/- b*i).
+ */
     c /= a;
+    b /= a;
+    a /= a;
 #endif
     discriminant = b*b - 4*a*c;
     if (discriminant < 0.)
