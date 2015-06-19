@@ -173,10 +173,8 @@ static vector cubic_inverse(double a, double b, double c, double d)
     { /* three real and unequal roots */
         double cosine_theta;
 
-        discriminant = -Q * -Q * -Q;
-        cosine_theta = R / sqrt(discriminant);
-
-        x[0].a = 2 * sqrt(-Q) * cos(cosine_theta / 3);
+        cosine_theta = R / sqrt(-Q * Q * Q);
+        x[0].a = 2*sqrt(-Q)*cos(cosine_theta / 3) - p/3;
         x[0].b = 0;
 
         fputs("Not yet implemented:  Cubic trigonometry.\n", stderr);
