@@ -143,6 +143,7 @@ static vector cubic_inverse(double a, double b, double c, double d)
 {
     vector x;
     double p, q, r;
+    double Q, R;
     double discriminant;
 
     if (a == 0.)
@@ -159,16 +160,19 @@ static vector cubic_inverse(double a, double b, double c, double d)
  */
     a = (3*q - p*p) / 3;
     b = (2*p*p*p - 9*p*q + 27*r) / 27;
-    discriminant = (b * b)/4 + (a * a * a)/27;
+
+    Q =  a / 3;
+    R = -b / 2;
+    discriminant = Q*Q*Q + R*R;
 
     if (discriminant < 0)
     { /* three real and unequal roots */
         double cosine_theta;
 
-        discriminant = -(a * a * a)/(3 * 3 * 3);
-        cosine_theta = -(b / 2) / sqrt(discriminant);
+        discriminant = -Q * -Q * -Q;
+        cosine_theta = R / sqrt(discriminant);
 
-        x[0].a = 2 * sqrt(-a / 3) * cos(cosine_theta / 3);
+        x[0].a = 2 * sqrt(-Q) * cos(cosine_theta / 3);
         x[0].b = 0;
 
         fputs("Not yet implemented:  Cubic trigonometry.\n", stderr);
@@ -198,8 +202,8 @@ static vector cubic_inverse(double a, double b, double c, double d)
     }
     else
     { /* one real root and two conjugate imaginary roots */
-        const double A = cbrt(-b/2 + sqrt(discriminant));
-        const double B = cbrt(-b/2 - sqrt(discriminant));
+        const double A = cbrt(R + sqrt(discriminant));
+        const double B = cbrt(R - sqrt(discriminant));
 
         x[0].a = A + B;
         x[0].b = 0;
