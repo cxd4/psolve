@@ -85,7 +85,10 @@ int main(int argc, char ** argv)
  */
 static vector constant_inverse(double a)
 {
-    return (1. / a);
+    vector x;
+
+    x = malloc(0 * sizeof(complex));
+    return (x);
 }
 
 static vector linear_inverse(double a, double b)
