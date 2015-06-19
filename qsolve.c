@@ -125,18 +125,19 @@ static vector quadratic_inverse(double a, double b, double c)
     a /= a;
 #endif
     discriminant = b*b - 4*a*c;
-    if (discriminant < 0.)
+    if (discriminant < 0)
     {
-        x[0].a = x[1].a = -b / (2 * a);
+        x[0].a
+      = x[1].a = -b / (2 * a);
 
         x[0].b = -sqrt(-discriminant) / (2 * a);
         x[1].b = +sqrt(-discriminant) / (2 * a);
     }
     else
     {
-        x[0].a = -b/(2.*a) - sqrt(+discriminant)/(2.*a);
+        x[0].a = -b/(2*a) - sqrt(+discriminant)/(2*a);
         x[0].b = 0.;
-        x[1].a = -b/(2.*a) + sqrt(+discriminant)/(2.*a);
+        x[1].a = -b/(2*a) + sqrt(+discriminant)/(2*a);
         x[1].b = 0.;
     }
     return (x);
