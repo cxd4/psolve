@@ -171,13 +171,18 @@ static vector cubic_inverse(double a, double b, double c, double d)
 
     if (discriminant < 0)
     { /* three real and unequal roots */
-        double cosine_theta;
+        double cosine_theta, theta;
+        const double pi = 3.1415926535897932384626433832795;
 
         cosine_theta = R / sqrt(-Q * Q * Q);
-        x[0].a = 2*sqrt(-Q)*cos(cosine_theta / 3) - p/3;
-        x[0].b = 0;
+        theta = acos(cosine_theta);
+        x[0].a = 2 * sqrt(-Q) * cos(theta/3 +   0*pi/180) - p/3;
+        x[1].a = 2 * sqrt(-Q) * cos(theta/3 + 120*pi/180) - p/3;
+        x[2].a = 2 * sqrt(-Q) * cos(theta/3 + 240*pi/180) - p/3;
 
-        fputs("Not yet implemented:  Cubic trigonometry.\n", stderr);
+        x[0].b
+      = x[1].b
+      = x[2].b = 0.;
     }
     else if (discriminant == 0)
     { /* three real roots of which two at least are equal */
