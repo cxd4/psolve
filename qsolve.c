@@ -167,8 +167,22 @@ static vector cubic_inverse(double a, double b, double c, double d)
 
     Q =  a / 3;
     R = -b / 2;
+#if 0
+    discriminant = (4*q*q*q - p*p*q*q + 4*p*p*p*r - 18*p*q*r + 27*r*r)/108.;
+#elif 0
+    discriminant = (4*a*a*a + 27*b*b) / (27. * 4.);
+#else
     discriminant = Q*Q*Q + R*R;
+#endif
 
+/*
+ * If the discriminant is negative, then the cubic formula ultimately yields
+ * the problem of adding cube roots of complex or imaginary numbers, even
+ * though this also means that all solutions for x are real numbers.
+ *     Example, if x^3 + 2x^2 - x - 2 = 0:
+ *         x0 = cbrt(10/27 + sqrt(-1/3)) + cbrt(10/27 - sqrt(-1/3)) = 1
+ * Every old book so far suggests to use a trigonometric alternative instead.
+ */
     if (discriminant < 0)
     { /* three real and unequal roots */
         double cosine_theta, theta;
