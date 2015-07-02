@@ -1,5 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
+
+#include <limits.h>
 #include <malloc.h>
 #include <memory.h>
 #include <time.h>
@@ -220,7 +222,7 @@ static int count_factors(long product)
  * elements of memory, of course.  Still, for mathematical accuracy...
  */
     if (product == 0)
-        return INFINITY_CLAMP(signed int);
+        return INT_MAX;
     if (product < 0)
         product = -product;
     number_of_factors = 0;
@@ -243,7 +245,7 @@ static int enum_factors(long * factors, long product)
         printf(" ... infinitely many ... ");
     for (
         factor  = 1.       ,   number_of_factors = 0;
-        factor <= product_f && number_of_factors < INFINITY_CLAMP(int);
+        factor <= product_f && number_of_factors < INT_MAX;
         factor += 1.       ,   number_of_factors++)
     {
         const double ratio = product_f / factor;
