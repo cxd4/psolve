@@ -208,9 +208,9 @@ static vector cubic_inverse(double a, double b, double c, double d)
  * b/2            = sqrt(-27a^3)/27
  * cbrt(b/2)      = cbrt(sqrt(-27a^3))/3
  *                = (-3^3 * a^3)^(1/6) / 3 = ((-3a)^3)^(1/6) / 3
- *                = sqrt(-3a) / 3
+ *                = sqrt(-a / 3) = sqrt(-Q) (defined above)
  */
-        A = B = sqrt(-3 * a) / 3;
+        A = B = sqrt(-Q);
 
         x[0].a = A + B;
         x[0].b = 0;
