@@ -124,7 +124,7 @@ static vector quadratic_inverse(double a, double b, double c)
     b /= a;
     a /= a;
 #endif
-    discriminant = b*b - 4*a*c;
+    discriminant = pow(b, 2) - 4*a*c;
     if (discriminant < 0)
     {
         x[0].a
@@ -162,8 +162,8 @@ static vector cubic_inverse(double a, double b, double c, double d)
  * Cardano's derivation of the cubic solutions in ca. 1545:
  * Rewrite "y^3 + py^2 + qy + r" as the reduced cubic "x^3 + ax + b = 0".
  */
-    a = (3*q - p*p) / 3;
-    b = (2*p*p*p - 9*p*q + 27*r) / 27;
+    a = q - pow(p, 2)/3;
+    b = r - p*q/3 + 2*pow(p, 3)/27;
 
     Q =  a / 3;
     R = -b / 2;
@@ -172,7 +172,7 @@ static vector cubic_inverse(double a, double b, double c, double d)
 #elif 0
     discriminant = (4*a*a*a + 27*b*b) / (27. * 4.);
 #else
-    discriminant = Q*Q*Q + R*R;
+    discriminant = pow(Q, 3) + pow(R, 2);
 #endif
 
 /*
@@ -188,7 +188,7 @@ static vector cubic_inverse(double a, double b, double c, double d)
         double cosine_theta, theta;
         const double pi = 3.1415926535897932384626433832795;
 
-        cosine_theta = R / sqrt(-Q * Q * Q);
+        cosine_theta = R / sqrt(pow(-Q, 3));
         theta = acos(cosine_theta);
         x[0].a = 2 * sqrt(-Q) * cos(theta/3 +   0*pi/180) - p/3;
         x[1].a = 2 * sqrt(-Q) * cos(theta/3 + 120*pi/180) - p/3;
