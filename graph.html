@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<head>
+<title>Function Graph Projector</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="http://cxd4.github.io/trig/blank.css" type="text/css">
+<script type="text/javascript" src="http://cxd4.github.io/OpenGL-js/gl.js"></script>
+<script type="text/javascript" src="graph.js"></script>
+</head>
+
+<body onload="main_GL()">
+<div>
+<table align="center">
+<tr>
+<td><i>f</i>(<i>x</i>)</td>
+<td align="center">=</td>
+<td><input type="text" id="f_x"></td>
+</tr>
+
+<tr>
+<td><i>g</i>(<i>x</i>)</td>
+<td align="center">=</td>
+<td><input type="text" id="g_x"></td>
+</tr>
+</table>
+</div>
+
+<div align="center">
+<p><button onclick="graph_all()">Graph All</button></p>
+</div>
+
+<table border="1" align="center">
+<tr><td align="center" colspan="3">+1</td></tr>
+
+<tr>
+<td>-1</td>
+<td>
+<noscript>
+JavaScript is required to graph functions from user input.<br>
+</noscript>
+
+<canvas id="GL_canvas" width="512" height="512">
+Your browser doesn't appear to support the <code>&lt;CANVAS&gt;</code> element.
+</canvas>
+</td>
+<td>+1</td>
+</tr>
+
+<tr><td align="center" colspan="3">-1</td></tr>
+</table>
+</body>
+</html>
