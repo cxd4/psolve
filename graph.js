@@ -32,12 +32,11 @@ function clear_graph() {
 
 var inverse_zoom = 1.0; /* graph magnification = 1 / inverse_zoom */
 
+var f_x = "";
+
 function f(x) {
     "use strict";
-    var expression;
-
-    expression = eval(document.getElementById("f_x").value);
-    return (expression);
+    return eval(f_x);
 }
 
 function graph_all() {
@@ -50,7 +49,8 @@ function graph_all() {
     glEnableClientState(GL_VERTEX_ARRAY);
     glLineWidth(1.0);
 
-    if (document.getElementById("f_x").value) {
+    f_x = document.getElementById("f_x").value;
+    if (f_x) {
         while (i < 512 && x <= +1.0) {
             vertex_buffer[4*i + X] = x;
             vertex_buffer[4*i + Y] = f(x);
