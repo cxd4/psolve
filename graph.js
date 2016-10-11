@@ -47,6 +47,7 @@ function graph_all() {
     clear_graph();
     glEnableClientState(GL_VERTEX_ARRAY);
     glLineWidth(2.0);
+    glPointSize(3.0);
 
     if (document.getElementById("f_x").value) {
         while (allocated < 512) {
