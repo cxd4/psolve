@@ -34,7 +34,10 @@ var inverse_zoom = 1.0; /* graph magnification = 1 / inverse_zoom */
 
 function f(x) {
     "use strict";
-    return (0.5);
+    var expression;
+
+    expression = eval(document.getElementById("f_x").value);
+    return (expression);
 }
 
 function graph_all() {
