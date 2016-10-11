@@ -46,7 +46,6 @@ function graph_all() {
     clear_graph();
     glEnableClientState(GL_VERTEX_ARRAY);
     glLineWidth(1.0);
-    glPointSize(2.0);
 
     if (document.getElementById("f_x").value) {
         while (i < 512 && x <= +1.0) {
@@ -58,10 +57,9 @@ function graph_all() {
             x += 1.0 / 256;
             i += 1;
         }
-        glColorMask(GL_TRUE, GL_FALSE, GL_FALSE, GL_FALSE);
+        glColorMask(GL_TRUE, GL_FALSE, GL_FALSE, GL_TRUE);
         glVertexPointer(4, GL_FLOAT, 0, vertex_buffer);
         glDrawArrays(GL_LINE_STRIP, 0, i);
-        glDrawArrays(GL_POINTS, 0, i);
     }
     return;
 }
