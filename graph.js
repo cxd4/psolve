@@ -45,6 +45,34 @@ function f(x) {
     "use strict";
     return eval(f_x);
 }
+function g(x) {
+    "use strict";
+    return eval(g_x);
+}
+function h(x) {
+    "use strict";
+    return eval(h_x);
+}
+function ii(x) {
+    "use strict";
+    return eval(i_x);
+}
+function j(x) {
+    "use strict";
+    return eval(j_x);
+}
+function k(x) {
+    "use strict";
+    return eval(k_x);
+}
+function l(x) {
+    "use strict";
+    return eval(l_x);
+}
+function m(x) {
+    "use strict";
+    return eval(m_x);
+}
 
 function graph_all() {
     "use strict";
@@ -93,7 +121,7 @@ function graph_all() {
         i = 0;
         x = -1.0 / inverse_zoom;
         while (i < raster_pitch) {
-            vertex_buffer[4*i + Y] = f(x);
+            vertex_buffer[4*i + Y] = g(x);
             x += 2.0 / raster_pitch;
             i += 1;
         }
@@ -105,7 +133,7 @@ function graph_all() {
         i = 0;
         x = -1.0 / inverse_zoom;
         while (i < raster_pitch) {
-            vertex_buffer[4*i + Y] = f(x);
+            vertex_buffer[4*i + Y] = h(x);
             x += 2.0 / raster_pitch;
             i += 1;
         }
@@ -117,7 +145,7 @@ function graph_all() {
         i = 0;
         x = -1.0 / inverse_zoom;
         while (i < raster_pitch) {
-            vertex_buffer[4*i + Y] = f(x);
+            vertex_buffer[4*i + Y] = ii(x);
             x += 2.0 / raster_pitch;
             i += 1;
         }
@@ -129,7 +157,7 @@ function graph_all() {
         i = 0;
         x = -1.0 / inverse_zoom;
         while (i < raster_pitch) {
-            vertex_buffer[4*i + Y] = f(x);
+            vertex_buffer[4*i + Y] = j(x);
             x += 2.0 / raster_pitch;
             i += 1;
         }
@@ -141,7 +169,7 @@ function graph_all() {
         i = 0;
         x = -1.0 / inverse_zoom;
         while (i < raster_pitch) {
-            vertex_buffer[4*i + Y] = f(x);
+            vertex_buffer[4*i + Y] = k(x);
             x += 2.0 / raster_pitch;
             i += 1;
         }
@@ -153,7 +181,7 @@ function graph_all() {
         i = 0;
         x = -1.0 / inverse_zoom;
         while (i < raster_pitch) {
-            vertex_buffer[4*i + Y] = f(x);
+            vertex_buffer[4*i + Y] = l(x);
             x += 2.0 / raster_pitch;
             i += 1;
         }
@@ -165,7 +193,7 @@ function graph_all() {
         i = 0;
         x = -1.0 / inverse_zoom;
         while (i < raster_pitch) {
-            vertex_buffer[4*i + Y] = f(x);
+            vertex_buffer[4*i + Y] = m(x);
             x += 2.0 / raster_pitch;
             i += 1;
         }
