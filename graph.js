@@ -74,6 +74,71 @@ function m(x) {
     return eval(m_x);
 }
 
+/*
+ * alias functions to help simplify the amount of typing user has to do in the
+ * definitions of each function
+ */
+
+var pi = Math.PI;
+var e = Math.E;
+
+function sin(x) {
+    "use strict";
+    return Math.sin(x);
+}
+function cos(x) {
+    "use strict";
+    return Math.cos(x);
+}
+function tan(x) {
+    "use strict";
+    return Math.tan(x);
+}
+
+function csc(x) {
+    "use strict";
+    return (1 / sin(x));
+}
+function sec(x) {
+    "use strict";
+    return (1 / cos(x));
+}
+function cot(x) {
+    "use strict";
+    return (1 / tan(x));
+}
+
+function arcsin(x) {
+    "use strict";
+    return Math.asin(x);
+}
+function arccos(x) {
+    "use strict";
+    return Math.acos(x);
+}
+function arctan(x) {
+    "use strict";
+    return Math.atan(x);
+}
+
+function sqrt(x) {
+    "use strict";
+    return Math.sqrt(x);
+}
+function cbrt(x) {
+    "use strict";
+    return Math.cbrt(x);
+}
+function pow(base, power) {
+    "use strict";
+    return Math.pow(base, power);
+}
+
+function abs(x) {
+    "use strict";
+    return Math.abs(x);
+}
+
 function graph_all() {
     "use strict";
     var x = -1.0 / inverse_zoom;
