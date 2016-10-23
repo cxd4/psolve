@@ -12,7 +12,11 @@ canvas {
     margin          :  auto;
 }
 
-table, td.t { /* titular data */
+table.t {
+    margin-left     :  auto;
+    margin-right    :  auto;
+}
+td.t { /* titular data */
     text-align:  center;
 }
 
