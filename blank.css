@@ -12,6 +12,10 @@ canvas {
     margin          :  auto;
 }
 
+table, td.t { /* titular data */
+    text-align:  center;
+}
+
 /*
  * Color-code the function names to match the colors in the graph.
  */
