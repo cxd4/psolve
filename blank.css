@@ -11,3 +11,31 @@ canvas {
     display         :  block;
     margin          :  auto;
 }
+
+/*
+ * Color-code the function names to match the colors in the graph.
+ */
+.red {
+    color:  #FF0000;
+}
+.blu {
+    color:  #0000FF;
+}
+.yel {
+    color:  #FFFF00;
+}
+.grn {
+    color:  #00FF00;
+}
+.mag {
+    color:  #FF00FF;
+}
+.cyn {
+    color:  #00FFFF;
+}
+.orn {
+    color:  #FF8000;
+}
+.ind {
+    color:  #8000FF;
+}
