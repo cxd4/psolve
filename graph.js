@@ -133,6 +133,16 @@ function pow(base, power) {
     "use strict";
     return Math.pow(base, power);
 }
+function nroot(index, base) {
+    "use strict";
+    var power = 1 / index;
+
+    if (base < 0 && index % 2 !== 0) {
+        return -Math.pow(-base, power);
+    } else {
+        return Math.pow(base, power);
+    }
+}
 
 function abs(x) {
     "use strict";
